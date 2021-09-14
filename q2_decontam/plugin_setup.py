@@ -11,39 +11,29 @@
 #   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 #   See the License for the specific language governing permissions and
 #   limitations under the License.
-import importlib
 
-from qiime2.plugin import Plugin, SemanticType, model
+from qiime2.plugin import Plugin
+from qiime2.plugin import Str
 
-from q2_decontam.format_types import (
-    RevealSectionsDirFmt, RevealAssetFormat, RevealSectionsFormat, Slides)
-import q2_decontam.actions as actions
+from .actions import hello
+
+# could also import specific actions and put these into the registration below
 
 
 # This is the plugin object. It is what the framework will load and what an
 # interface will interact with. Basically every registration we perform will
 # involve this object in some way.
 plugin = Plugin("decontam", version="0.0.1.dev",
-                website="https://github.com/ebolyen/q2-reveal")
+                website="https://github.com/Hsapers/q2-decontam")
 
-plugin.register_formats(RevealSectionsDirFmt, RevealSectionsFormat,
-                        RevealAssetFormat)
-
-plugin.register_semantic_types(Slides)
-plugin.register_semantic_type_to_format(Slides, RevealSectionsDirFmt)
-
-
-plugin.visualizers.register_function(
-    function=actions.render,
-    inputs={'slides': Slides},
+plugin.methods.register_function(
+    function= hello,
+    inputs={},
     parameters={},
-    input_descriptions={
-        'slides': 'The slides to display.'
-    },
+    input_descriptions={},
     parameter_descriptions={},
-    name='Render slides',
-    description="Convert a reveal.js slide deck into a self-contained"
-                " visualization"
+    outputs=[('text', Str)],
+    name='The hello world function',
+    description="print 'hello world'"
 )
 
-importlib.import_module("q2_decontam.transformers")

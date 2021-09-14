@@ -24,7 +24,7 @@ setup(
     author_email="haley.sapers@gmail.com",
     description="Remove contaminants using the r decontam and manual inspection",
     license='Apache-2.0',
-    url="https://github.com/ebolyen/q2-reveal",
+    url="https://github.com/HSapers/q2-decontam.git",
     # This entry_point defines a structure in your site-packages which
     # pkg_resources can use to load "stuff" from a "namespace".
     # QIIME 2 has defined a namespace called qiime2.plugins, and it should
