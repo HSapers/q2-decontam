@@ -16,9 +16,9 @@ from qiime2.plugin import Plugin
 from qiime2.plugin import Str
 
 from .actions import hello
+from .format_types import Greeting, GreetingFormat, GreetingDirectoryFormat
 
 # could also import specific actions and put these into the registration below
-
 
 # This is the plugin object. It is what the framework will load and what an
 # interface will interact with. Basically every registration we perform will
@@ -32,8 +32,14 @@ plugin.methods.register_function(
     parameters={},
     input_descriptions={},
     parameter_descriptions={},
-    outputs=[('text', Str)],
+    outputs=[('text', Greeting)],
     name='The hello world function',
     description="print 'hello world'"
 )
 
+plugin.register_semantic_types(
+    Greeting
+)
+
+plugin.register_formats(GreetingFormat)
+plugin.register_semantic_type_to_format(Greeting, GreetingDirectoryFormat)

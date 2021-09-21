@@ -12,7 +12,10 @@
 #   See the License for the specific language governing permissions and
 #   limitations under the License.
 
-def hello():
-    """print hello world"""
-    print('Hello World !')
+from q2_decontam.format_types import GreetingDirectoryFormat, GreetingFormat
 
+def hello() -> GreetingFormat:
+    gf = GreetingFormat()
+    with open(gf, 'w') as output_gh:
+        output_gh.write("hello World!")
+        return gf
