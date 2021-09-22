@@ -1,4 +1,4 @@
-#   Copyright 2021 Evan Bolyen
+#   Copyright 2021 Haley Sapers
 #
 #   Licensed under the Apache License, Version 2.0 (the "License");
 #   you may not use this file except in compliance with the License.
@@ -19,7 +19,6 @@ from qiime2.plugin import SemanticType
 
 # Define a new semantic type. This is really just an abstract symbol which
 # can be used to constrain/define valid compositions of actions.
-Slides = SemanticType('Slides')
 Greeting = SemanticType('Greeting')
 
 class GreetingFormat(model.TextFileFormat):
