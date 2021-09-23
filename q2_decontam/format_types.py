@@ -19,6 +19,7 @@ from qiime2.plugin import SemanticType
 
 # Define a new semantic type. This is really just an abstract symbol which
 # can be used to constrain/define valid compositions of actions.
+
 Greeting = SemanticType('Greeting')
 
 class GreetingFormat(model.TextFileFormat):
@@ -27,4 +28,15 @@ class GreetingFormat(model.TextFileFormat):
         pass
 
 GreetingDirectoryFormat = model.SingleFileDirectoryFormat(
-    'GreetingFormat', 'greeting.txt', GreetingFormat)
+    'GreetingDirectoryFormat', 'greeting.txt', GreetingFormat)
+
+# This call assigns a default format to a Type, not vice versa. One format
+# can be the default for many types. Each type should have a single default format
+
+# model.SFDF(<Name of the SFDF - should match the variable being assigned>, <name of internal fn>, <file format>)
+# This function doesn't magically register anything - we need to manually register
+# both FileFormat and SFDF before we can use them
+
+# if a new type will become a .qza (FeatureTable will, RelativeFrequency
+# probably will not), we must register it to a format or the framework won't
+# know how to produce a .qza of that type
