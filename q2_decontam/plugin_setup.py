@@ -40,5 +40,5 @@ plugin.register_semantic_types(
     Greeting
 )
 
-plugin.register_formats(GreetingFormat)
+plugin.register_formats(GreetingFormat, GreetingDirectoryFormat)
 plugin.register_semantic_type_to_format(Greeting, GreetingDirectoryFormat)
