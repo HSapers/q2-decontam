@@ -14,7 +14,7 @@
 
 from qiime2.plugin import Plugin
 
-from .actions import hello
+from .actions import hello, text_vis
 from .format_types import Greeting, GreetingFormat, GreetingDirectoryFormat
 
 # could also import specific actions and put these into the registration below
@@ -24,6 +24,10 @@ from .format_types import Greeting, GreetingFormat, GreetingDirectoryFormat
 # involve this object in some way.
 plugin = Plugin("decontam", version="0.0.1.dev",
                 website="https://github.com/Hsapers/q2-decontam")
+
+plugin.register_semantic_types(Greeting)
+plugin.register_formats(GreetingFormat, GreetingDirectoryFormat)
+plugin.register_semantic_type_to_format(Greeting, GreetingDirectoryFormat)
 
 plugin.methods.register_function(
     function= hello,
@@ -36,9 +40,12 @@ plugin.methods.register_function(
     description="print 'hello world'"
 )
 
-plugin.register_semantic_types(
-    Greeting
+plugin.visualizers.register_function(
+    function=text_vis,
+    inputs={'greeting':Greeting},
+    input_descriptions={'greeting':'text file returned by hello'},
+    parameters={},
+    parameter_descriptions={},
+    name='Greeting text',
+    description=("generate a viewable image of the Greeting text")
 )
-
-plugin.register_formats(GreetingFormat, GreetingDirectoryFormat)
-plugin.register_semantic_type_to_format(Greeting, GreetingDirectoryFormat)

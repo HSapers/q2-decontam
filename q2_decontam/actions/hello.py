@@ -16,6 +16,7 @@ from q2_decontam.format_types import GreetingFormat
 
 def hello() -> GreetingFormat:
     gf = GreetingFormat()
+    #print(gf)
     with open((str(gf)), 'w') as output_gh:
         output_gh.write("hello World!")
         return gf
