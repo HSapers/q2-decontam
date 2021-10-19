@@ -13,9 +13,15 @@
 #   limitations under the License.
 
 import os
+import pandas as pd
 
+
+from qiime2.plugin import ValidationError
+import qiime2
 import qiime2.plugin.model as model
 from qiime2.plugin import SemanticType
+from q2_types.feature_table._type import FeatureTable
+from q2_types.feature_data._type import FeatureData
 
 # Define a new semantic type. This is really just an abstract symbol which
 # can be used to constrain/define valid compositions of actions.
@@ -28,4 +34,37 @@ class GreetingFormat(model.TextFileFormat):
         pass
 
 GreetingDirectoryFormat = model.SingleFileDirectoryFormat(
-    'GreetingFormat', 'greeting.txt', GreetingFormat)
+    'GreetingDirectoryFormat', 'greeting.txt', GreetingFormat
+)
+
+Filter = SemanticType('Filter',
+                            variant_of=FeatureData.field['type'])
+
+class FilterFormat(model.TextFileFormat):
+    def _validate_(self, *args):
+        try:
+            md = qiime2.Metadata.load(str(self))
+        except qiime2.metadata.MetadataFileError as md_exc:
+            raise ValidationError(md_exc) from md_exc
+
+        if md.column_count == 0:
+            raise ValidationError('Format must contain at least 1 column')
+
+FilterDirectoryFormat = model.SingleFileDirectoryFormat(
+    'FilterDirectoryFormat', 'filter.tsv', FilterFormat)
+
+
+
+
+# This call assigns a default format to a Type, not vice versa. One format
+# can be the default for many types. Each type should have a single default format
+
+# model.SFDF(<Name of the SFDF - should match the variable being assigned>, <name of internal fn>, <file format>)
+# This function doesn't magically register anything - we need to manually register
+# both FileFormat and SFDF before we can use them
+
+# if a new type will become a .qza (FeatureTable will, RelativeFrequency
+# probably will not), we must register it to a format or the framework won't
+# know how to produce a .qza of that type
+
+
