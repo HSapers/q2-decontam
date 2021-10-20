@@ -11,6 +11,7 @@ lint: all
 
 dev: all
 	pip install -e .
+	qiime dev refresh-cache
 
 test: all
 	py.test
