@@ -1,4 +1,4 @@
-#   Copyright 2021 Evan Bolyen
+#   Copyright 2021 Haley Sapers
 #
 #   Licensed under the Apache License, Version 2.0 (the "License");
 #   you may not use this file except in compliance with the License.
@@ -22,7 +22,7 @@ setup(
     package_data={},
     author="Haley Sapers",
     author_email="haley.sapers@gmail.com",
-    description="Remove contaminants using the r decontam and manual inspection",
+    description="Remove contaminants using r-decontam and manual inspection",
     license='Apache-2.0',
     url="https://github.com/HSapers/q2-decontam.git",
     # This entry_point defines a structure in your site-packages which

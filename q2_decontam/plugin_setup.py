@@ -1,4 +1,4 @@
-#   Copyright 2021 Evan Bolyen
+#   Copyright 2021 Haley Sapers
 #
 #   Licensed under the Apache License, Version 2.0 (the "License");
 #   you may not use this file except in compliance with the License.
@@ -13,9 +13,8 @@
 #   limitations under the License.
 
 from qiime2.plugin import Plugin
-from qiime2.plugin import Str
 
-from .actions import hello
+from .actions import hello, text_vis
 from .format_types import Greeting, GreetingFormat, GreetingDirectoryFormat
 
 # could also import specific actions and put these into the registration below
@@ -26,8 +25,12 @@ from .format_types import Greeting, GreetingFormat, GreetingDirectoryFormat
 plugin = Plugin("decontam", version="0.0.1.dev",
                 website="https://github.com/Hsapers/q2-decontam")
 
+plugin.register_semantic_types(Greeting)
+plugin.register_formats(GreetingFormat, GreetingDirectoryFormat)
+plugin.register_semantic_type_to_format(Greeting, GreetingDirectoryFormat)
+
 plugin.methods.register_function(
-    function= hello,
+    function=hello,
     inputs={},
     parameters={},
     input_descriptions={},
@@ -37,9 +40,12 @@ plugin.methods.register_function(
     description="print 'hello world'"
 )
 
-plugin.register_semantic_types(
-    Greeting
+plugin.visualizers.register_function(
+    function=text_vis,
+    inputs={'greeting': Greeting},
+    input_descriptions={'greeting': 'text file returned by hello'},
+    parameters={},
+    parameter_descriptions={},
+    name='Greeting text',
+    description=("generate a viewable image of the Greeting text")
 )
-
-plugin.register_formats(GreetingFormat)
-plugin.register_semantic_type_to_format(Greeting, GreetingDirectoryFormat)

@@ -1,4 +1,4 @@
-#   Copyright 2021 Evan Bolyen
+#   Copyright 2021 Haley Sapers
 #
 #   Licensed under the Apache License, Version 2.0 (the "License");
 #   you may not use this file except in compliance with the License.
@@ -11,5 +11,13 @@
 #   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 #   See the License for the specific language governing permissions and
 #   limitations under the License.
+import os
+
+from q2_decontam.format_types import GreetingFormat
 
 
+def text_vis(output_dir: str, greeting: GreetingFormat) -> None:
+    with open(greeting.path, "r") as contents:
+        with open(os.path.join(output_dir, "index.html"), "w") as fh:
+            for lines in contents.readlines():
+                fh.write("<pre>" + lines + "</pre> <br>\n")
