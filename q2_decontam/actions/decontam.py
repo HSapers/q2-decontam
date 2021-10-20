@@ -108,7 +108,7 @@ def control_batches(table: biom.Table,
 
 
     if extraction_key is not None:
-         extractions = list(sample_metadata[extraction_key].unique())
+        extractions = list(sample_metadata[extraction_key].unique())
 
         for ext in extractions:
             filter_features(table=table, metadata=sample_metadata,

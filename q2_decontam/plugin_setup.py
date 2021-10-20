@@ -12,13 +12,12 @@
 #   See the License for the specific language governing permissions and
 #   limitations under the License.
 
-from qiime2.plugin import (Plugin, Metadata) #type q2.metadata is the object
+from qiime2.plugin import (Plugin, Metadata)  # type q2.metadata is the object
 from .actions import hello, text_vis
-from .actions.decontam import filter_asv_singletons
 from .format_types import Greeting, GreetingFormat, GreetingDirectoryFormat, \
     Filter, FilterFormat, FilterDirectoryFormat
-from q2_types.feature_table import (
-    FeatureTable, Frequency, RelativeFrequency)
+# from q2_types.feature_table import (
+#    FeatureTable, Frequency, RelativeFrequency)
 from q2_types.feature_data import (
     FeatureData, Taxonomy)
 
@@ -60,15 +59,15 @@ plugin.visualizers.register_function(
     description="generate a viewable image of the Greeting text"
 )
 
-plugin.methods.register_function(
-    function=filter_asv_singletons,
-    inputs={'table': FeatureTable[Frequency]},
-    parameters={'sample_metadata': Metadata},
-    input_descriptions={'table': 'the feature table to be filtered'},
-    parameter_descriptions={'sample_metadata': 'metadata'},
-    outputs=[('ids_to_filter', Filter)],
-    name='remove singletons',
-    description='removes ASVs with 0 reads or singleton ASVs that may have '
-                'been introduced during up'
-                'stream filtering before entering the decontam pipeline.'
-)
+# plugin.methods.register_function(
+#     function=filter_asv_singletons,
+#     inputs={'table': FeatureTable[Frequency]},
+#     parameters={'sample_metadata': Metadata},
+#     input_descriptions={'table': 'the feature table to be filtered'},
+#     parameter_descriptions={'sample_metadata': 'metadata'},
+#     outputs=[('ids_to_filter', Filter)],
+#     name='remove singletons',
+#     description='removes ASVs with 0 reads or singleton ASVs that may have '
+#                 'been introduced during up'
+#                 'stream filtering before entering the decontam pipeline.'
+# )
