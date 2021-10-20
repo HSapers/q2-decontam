@@ -15,9 +15,9 @@ import os
 
 from q2_decontam.format_types import GreetingFormat
 
+
 def text_vis(output_dir: str, greeting: GreetingFormat) -> None:
-    #print(file)
-    with open(greeting.path,"r") as contents:
+    with open(greeting.path, "r") as contents:
         with open(os.path.join(output_dir, "index.html"), "w") as fh:
             for lines in contents.readlines():
                 fh.write("<pre>" + lines + "</pre> <br>\n")

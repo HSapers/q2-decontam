@@ -30,7 +30,7 @@ plugin.register_formats(GreetingFormat, GreetingDirectoryFormat)
 plugin.register_semantic_type_to_format(Greeting, GreetingDirectoryFormat)
 
 plugin.methods.register_function(
-    function= hello,
+    function=hello,
     inputs={},
     parameters={},
     input_descriptions={},
@@ -42,8 +42,8 @@ plugin.methods.register_function(
 
 plugin.visualizers.register_function(
     function=text_vis,
-    inputs={'greeting':Greeting},
-    input_descriptions={'greeting':'text file returned by hello'},
+    inputs={'greeting': Greeting},
+    input_descriptions={'greeting': 'text file returned by hello'},
     parameters={},
     parameter_descriptions={},
     name='Greeting text',

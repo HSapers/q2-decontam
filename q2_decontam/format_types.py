@@ -12,8 +12,6 @@
 #   See the License for the specific language governing permissions and
 #   limitations under the License.
 
-import os
-
 import qiime2.plugin.model as model
 from qiime2.plugin import SemanticType
 
@@ -22,20 +20,24 @@ from qiime2.plugin import SemanticType
 
 Greeting = SemanticType('Greeting')
 
+
 class GreetingFormat(model.TextFileFormat):
     def _validate_(self, level='min'):
         # TODO: ran out of time
         pass
 
+
 GreetingDirectoryFormat = model.SingleFileDirectoryFormat(
     'GreetingDirectoryFormat', 'greeting.txt', GreetingFormat)
 
 # This call assigns a default format to a Type, not vice versa. One format
-# can be the default for many types. Each type should have a single default format
+# can be the default for many types. Each type should have a single default
+# format
 
-# model.SFDF(<Name of the SFDF - should match the variable being assigned>, <name of internal fn>, <file format>)
-# This function doesn't magically register anything - we need to manually register
-# both FileFormat and SFDF before we can use them
+# model.SFDF(<Name of the SFDF - should match the variable being assigned>,
+# <name of internal fn>, <file format>). This function doesn't magically
+# register anything - we need to manually register both FileFormat and SFDF
+# before we can use them
 
 # if a new type will become a .qza (FeatureTable will, RelativeFrequency
 # probably will not), we must register it to a format or the framework won't
