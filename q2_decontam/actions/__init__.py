@@ -14,10 +14,10 @@
 
 from .hello import hello
 from .text_vis import text_vis
-from .decontam import run_commands
+from .decontam import run_commands, split_batches
 
 # Good practice is to explicitely mark what is "available" for
 # subpackage export. This is only used by the `from x import *` syntax, but
 # it also keeps linters from complaining
 
-__all__ = ['hello', 'text_vis', 'run_commands']
+__all__ = ['hello', 'text_vis', 'run_commands', 'split_batches']

@@ -12,14 +12,18 @@
 #   See the License for the specific language governing permissions and
 #   limitations under the License.
 
-from qiime2.plugin import (Plugin, Metadata)  # type q2.metadata is the object
-from .actions import hello, text_vis
-from .format_types import Greeting, GreetingFormat, GreetingDirectoryFormat, \
-    Filter, FilterFormat, FilterDirectoryFormat
-# from q2_types.feature_table import (
-#    FeatureTable, Frequency, RelativeFrequency)
+import importlib
+
+from qiime2.plugin import (Plugin, Metadata, List, Str)  # type q2.metadata is the object
 from q2_types.feature_data import (
     FeatureData, Taxonomy)
+
+from .actions import hello, text_vis, split_batches
+from .format_types import Greeting, GreetingFormat, GreetingDirectoryFormat, \
+    Filter, FilterFormat, FilterDirectoryFormat, BatchSet, YamlDirectoryFormat
+# from q2_types.feature_table import (
+#    FeatureTable, Frequency, RelativeFrequency)
+
 
 # could also import specific actions and put these into the registration below
 
@@ -29,14 +33,18 @@ from q2_types.feature_data import (
 plugin = Plugin("decontam", version="0.0.1.dev",
                 website="https://github.com/Hsapers/q2-decontam")
 
-plugin.register_semantic_types(Greeting, Filter)
+plugin.register_semantic_types(Greeting, Filter, BatchSet)
 plugin.register_formats(GreetingFormat, GreetingDirectoryFormat,
-                        FilterFormat, FilterDirectoryFormat)
+                        FilterFormat, FilterDirectoryFormat,
+                        YamlDirectoryFormat)
 
 plugin.register_semantic_type_to_format(
     FeatureData[Filter], FilterDirectoryFormat)
 
 plugin.register_semantic_type_to_format(Greeting, GreetingDirectoryFormat)
+
+plugin.register_semantic_type_to_format(
+    BatchSet, YamlDirectoryFormat)
 
 plugin.methods.register_function(
     function=hello,
@@ -59,6 +67,16 @@ plugin.visualizers.register_function(
     description="generate a viewable image of the Greeting text"
 )
 
+plugin.methods.register_function(
+    function=split_batches,
+    inputs={},
+    parameters={'sample_metadata': Metadata,
+                'batch_types':List[Str]}, #map parameter type
+    outputs=[('batches', BatchSet)],
+    name='',
+    description=''
+)
+
 # plugin.methods.register_function(
 #     function=filter_asv_singletons,
 #     inputs={'table': FeatureTable[Frequency]},
@@ -71,3 +89,6 @@ plugin.visualizers.register_function(
 #                 'been introduced during up'
 #                 'stream filtering before entering the decontam pipeline.'
 # )
+
+importlib.import_module('q2_decontam.transformers')
+# need to import this import is special

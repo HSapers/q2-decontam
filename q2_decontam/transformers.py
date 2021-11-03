@@ -16,17 +16,33 @@ import pandas as pd
 
 import qiime2 as q2
 import qiime2.util
+import yaml
 
 from q2_types.feature_table import FeatureTable
 from q2_types.feature_data import Taxonomy
 from q2_decontam.plugin_setup import plugin
+from q2_types.per_sample_sequences import YamlFormat
 
 from .format_types import FilterFormat
 
-#transform Filter to CategoricalMetadataColumn(MetadataColumn)
+# transform Filter to CategoricalMetadataColumn(MetadataColumn)
 @plugin.register_transformer
 def _1(ff: FilterFormat) -> qiime2.Metadata:
     return qiime2.Metadata.load(str(ff))
+
+# dictionary to yaml format
+@plugin.register_transformer
+def _2(obj: dict) -> YamlFormat:
+    ff = YamlFormat() #allocate location for making a ymal
+    with ff.open() as fh:
+        yaml.safe_dump(obj, fh, default_flow_style = False)
+    return ff
+
+# yaml to dict
+@plugin.register_transformer
+def _3(ff: YamlFormat) -> dict:
+    with ff.open() as fh:
+        return yaml.safe_load(fh)
 
 def tidy_data(metadata: qiime2.Metadata, tax_table: Taxonomy, feature_table: FeatureTable, outfile: str ):
     ASV_table = q2.Artifact.load(feature_table)

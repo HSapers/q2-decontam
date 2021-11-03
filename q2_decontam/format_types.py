@@ -19,6 +19,7 @@ from qiime2.plugin import ValidationError
 import qiime2
 import qiime2.plugin.model as model
 from qiime2.plugin import SemanticType
+from q2_types.per_sample_sequences import YamlFormat
 from q2_types.feature_table._type import FeatureTable
 from q2_types.feature_data._type import FeatureData
 
@@ -54,8 +55,10 @@ class FilterFormat(model.TextFileFormat):
 FilterDirectoryFormat = model.SingleFileDirectoryFormat(
     'FilterDirectoryFormat', 'filter.tsv', FilterFormat)
 
+BatchSet = SemanticType('BatchSet')
 
-
+YamlDirectoryFormat = model.SingleFileDirectoryFormat(
+    'YamlDirectoryFormat', 'data.yaml', YamlFormat)
 
 # This call assigns a default format to a Type, not vice versa. One format
 # can be the default for many types. Each type should have a single default
