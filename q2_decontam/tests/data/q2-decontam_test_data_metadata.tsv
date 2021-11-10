@@ -1,0 +1,57 @@
+sampleid	sample_type	extraction	ext_sample_type	extraction_kit_cat_number	extraction_kit_lot_number	extraction_date	extraction_protocol	amplification	amp_batch	amp_sample_type	amplification_date	amplification_cycles	sequence_date	sequence_run	sequence_method
+HMS-poorman-B	experimental	1	experimental	12888-50	154046697	October 3 2018	Qiagen Dneasy Power Soil	1	1	experimental	October 4 2018	28	2017Dec01	1	illumina 2-step
+HMS-poorman-C	experimental	1	experimental	12888-50	154046697	October 3 2018	Qiagen Dneasy Power Soil	1	1	experimental	October 4 2018	28	2017Dec01	1	illumina 2-step
+HMS-yates-B	experimental	1	experimental	12888-50	154046697	October 3 2018	Qiagen Dneasy Power Soil	1	1	experimental	October 4 2018	28	2017Dec01	1	illumina 2-step
+HMS-yates-C	experimental	1	experimental	12888-50	154046697	October 3 2018	Qiagen Dneasy Power Soil	1	1	experimental	October 4 2018	28	2017Dec01	1	illumina 2-step
+HMS-glass-beads	experimental	1	experimental	12888-50	154046697	October 3 2018	Qiagen Dneasy Power Soil	1	1	experimental	October 4 2018	28	2017Dec01	1	illumina 2-step
+HMS-SURF-0517-M3-C	experimental	1	experimental	12888-50	154046697	October 3 2018	Qiagen Dneasy Power Soil	1	1	experimental	October 4 2018	28	2017Dec01	1	illumina 2-step
+HMS-SURF-0517-M4-C	experimental	1	experimental	12888-50	154046697	October 3 2018	Qiagen Dneasy Power Soil	1	1	experimental	October 4 2018	28	2017Dec01	1	illumina 2-step
+HMS-SURF-0517-C3-C	experimental	1	experimental	12888-50	154046697	October 3 2018	Qiagen Dneasy Power Soil	1	1	experimental	October 4 2018	28	2017Dec01	1	illumina 2-step
+HMS-SURF-0517-C4-C	experimental	1	experimental	12888-50	154046697	October 3 2018	Qiagen Dneasy Power Soil	1	1	experimental	October 4 2018	28	2017Dec01	1	illumina 2-step
+HMS-SURF-0517-M5-C	experimental	1	experimental	12888-50	154046697	October 3 2018	Qiagen Dneasy Power Soil	1	1	experimental	October 4 2018	28	2017Dec01	1	illumina 2-step
+HMS-SURF-0517-M6-C	experimental	1	experimental	12888-50	154046697	October 3 2018	Qiagen Dneasy Power Soil	1	1	experimental	October 4 2018	28	2017Dec01	1	illumina 2-step
+HMS-SURF-0217-M1-C	experimental	2	experimental	12888-50	154046697	October 4 2018	Qiagen Dneasy Power Soil	1	1	experimental	October 4 2018	28	2017Dec01	1	illumina 2-step
+HMS-SURF-0217-M2-C	experimental	2	experimental	12888-50	154046697	October 4 2018	Qiagen Dneasy Power Soil	1	1	experimental	October 4 2018	28	2017Dec01	1	illumina 2-step
+HMS-SURF-0217-C3-C	experimental	2	experimental	12888-50	154047188	October 4 2018	Qiagen Dneasy Power Soil	1	1	experimental	October 4 2018	28	2017Dec01	1	illumina 2-step
+HMS-SURF-0217-C4-C	experimental	2	experimental	12888-50	154047188	October 4 2018	Qiagen Dneasy Power Soil	1	1	experimental	October 4 2018	28	2017Dec01	1	illumina 2-step
+HMS-SURF-0217-M3-C	experimental	2	experimental	12888-50	154046697	October 4 2018	Qiagen Dneasy Power Soil	1	1	experimental	October 4 2018	28	2017Dec01	1	illumina 2-step
+HMS-SURF-0217-M4-C	experimental	2	experimental	12888-50	154046697	October 4 2018	Qiagen Dneasy Power Soil	1	1	experimental	October 4 2018	28	2017Dec01	1	illumina 2-step
+HMS-SURF-0217-M8-B	experimental	2	experimental	12888-50	154047188	October 4 2018	Qiagen Dneasy Power Soil	1	1	experimental	October 4 2018	28	2017Dec01	1	illumina 2-step
+HMS-SURF-0517-M1-B	experimental	1	experimental	12888-50	154046697	October 3 2018	Qiagen Dneasy Power Soil	2	2	experimental	October 9 2018	33	2017Dec01	1	illumina 2-step
+HMS-SURF-0517-M2-B	experimental	1	experimental	12888-50	154046697	October 3 2018	Qiagen Dneasy Power Soil	2	2	experimental	October 9 2018	33	2017Dec01	1	illumina 2-step
+HMS-SURF-0517-C1-B	experimental	1	experimental	12888-50	154046697	October 3 2018	Qiagen Dneasy Power Soil	2	2	experimental	October 9 2018	33	2017Dec01	1	illumina 2-step
+HMS-SURF-0517-C2-B	experimental	1	experimental	12888-50	154046697	October 3 2018	Qiagen Dneasy Power Soil	2	2	experimental	October 9 2018	33	2017Dec01	1	illumina 2-step
+HMS-neg-ext-33	control	1	control	12888-50	154046697	October 3 2018	Qiagen Dneasy Power Soil	2	2	experimental	October 9 2018	33	2017Dec01	1	illumina 2-step
+HMS-neg-PCR-33	control						PCR blank 33 cycles	2	2	control	October 9 2018	33	2017Dec01	1	illumina 2-step
+HMS-SURF-0217-M7-B	experimental	2	experimental	12888-50	154046697	October 4 2018	Qiagen Dneasy Power Soil	2	2	experimental	October 9 2018	33	2017Dec01	1	illumina 2-step
+HMS-SURF-0217-C1-B	experimental	2	experimental	12888-50	154047188	October 4 2018	Qiagen Dneasy Power Soil	2	2	experimental	October 9 2018	33	2017Dec01	1	illumina 2-step
+HMS-SURF-0217-C2-B	experimental	2	experimental	12888-50	154047188	October 4 2018	Qiagen Dneasy Power Soil	2	2	experimental	October 9 2018	33	2017Dec01	1	illumina 2-step
+HMS-neg-ext--55	control	1	control	12888-50	154046697	October 3 2018	Qiagen Dneasy Power Soil	3	2	experimental	October 4 2018	55	2017Dec01	1	illumina 2-step
+HMS-neg-PCR-55	control						PCR blank 55 cycles	3	2	control	October 4 2018	55	2017Dec01	1	illumina 2-step
+HMS-1128-M8C-28	experimental	3	experimental	12888-50	157024533	July 6 2018	Qiagen Dneasy Power Soil	4	3	experimental	July 7 2018	28	2018Sep28	2	illumina 2-step
+HMS-0416-M3C	experimental	3	experimental	12888-50	157024533	July 6 2018	Qiagen Dneasy Power Soil	4	3	experimental	July 7 2018	28	2018Sep28	2	illumina 2-step
+HMS-0416-M5C	experimental	3	experimental	12888-50	157024533	July 6 2018	Qiagen Dneasy Power Soil	4	3	experimental	July 7 2018	28	2018Sep28	2	illumina 2-step
+HMS-1128-M7C	experimental	3	experimental	12888-50	157024533	July 6 2018	Qiagen Dneasy Power Soil	5	4	experimental	July 18 2018	33	2018Sep28	2	illumina 2-step
+HMS-1128-M8C-33	experimental	3	experimental	12888-50	157024533	July 6 2018	Qiagen Dneasy Power Soil	5	4	experimental	July 18 2018	33	2018Sep28	2	illumina 2-step
+HMS-1128-C2C	experimental	3	experimental	12888-50	157024533	July 6 2018	Qiagen Dneasy Power Soil	5	4	experimental	July 18 2018	33	2018Sep28	2	illumina 2-step
+HMS-1128-C3C	experimental	3	experimental	12888-50	157024533	July 6 2018	Qiagen Dneasy Power Soil	5	4	experimental	July 18 2018	33	2018Sep28	2	illumina 2-step
+HMS-1128-M5C	experimental	3	experimental	12888-50	157024533	July 6 2018	Qiagen Dneasy Power Soil	5	4	experimental	July 18 2018	33	2018Sep28	2	illumina 2-step
+HMS-1128-M6C	experimental	3	experimental	12888-50	157024533	July 6 2018	Qiagen Dneasy Power Soil	5	4	experimental	July 18 2018	33	2018Sep28	2	illumina 2-step
+HMS-1128-M1B	experimental	3	experimental	12888-50	157024533	July 6 2018	Qiagen Dneasy Power Soil	5	4	experimental	July 18 2018	33	2018Sep28	2	illumina 2-step
+HMS-1128-M2B	experimental	3	experimental	12888-50	157024533	July 6 2018	Qiagen Dneasy Power Soil	5	4	experimental	July 18 2018	33	2018Sep28	2	illumina 2-step
+HMS-1128-C1B	experimental	3	experimental	12888-50	157024533	July 6 2018	Qiagen Dneasy Power Soil	5	4	experimental	July 18 2018	33	2018Sep28	2	illumina 2-step
+HMS-1128-C4B	experimental	3	experimental	12888-50	157024533	July 6 2018	Qiagen Dneasy Power Soil	5	4	experimental	July 18 2018	33	2018Sep28	2	illumina 2-step
+HMS-0416-C2C	experimental	3	experimental	12888-50	157024533	July 6 2018	Qiagen Dneasy Power Soil	5	4	experimental	July 18 2018	33	2018Sep28	2	illumina 2-step
+HMS-0416-C3C	experimental	3	experimental	12888-50	157024533	July 6 2018	Qiagen Dneasy Power Soil	5	4	experimental	July 18 2018	33	2018Sep28	2	illumina 2-step
+HMS-0416-M1B	experimental	3	experimental	12888-50	157024533	July 6 2018	Qiagen Dneasy Power Soil	5	4	experimental	July 18 2018	33	2018Sep28	2	illumina 2-step
+HMS-0416-C1B	experimental	4	experimental	12888-50	157024533	July 19 2018	Qiagen Dneasy Power Soil	5	4	experimental	July 18 2018	33	2018Sep28	2	illumina 2-step
+HMS-blank-3	control	4	experimental	12888-50	157024533	July 19 2018	Qiagen Dneasy Power Soil	5	4	experimental	July 18 2018	33	2018Sep28	2	illumina 2-step
+HMS-blank-1	control	3	control	12888-50	157024533	July 6 2018	Qiagen Dneasy Power Soil	6	4	experimental	July 18 2018	55	2018Sep28	2	illumina 2-step
+HMS-blank-2	control	3	control	12888-50	157024533	July 6 2018	Qiagen Dneasy Power Soil	6	4	experimental	July 18 2018	55	2018Sep28	2	illumina 2-step
+HMS-PCR-neg	control						PCR blank 55 cycles	6	4	control	July 18 2018	55	2018Sep28	2	illumina 2-step
+HMS-DeMMO5-steri-140218	experimental	NorthWestern	experimental	14600-50-NF	unknown	June 15 2017	MoBIO PowerWater Sterivex DNA Isolation Kit	7	5	experimental	Dec 16 2019	33	2019Dec20	3	illumina 2-step
+HMS-DeMMO5-steri-100517	experimental	NorthWestern	experimental	14600-50-NF	unknown	June 16 2017	MoBIO PowerWater Sterivex DNA Isolation Kit	7	5	experimental	Dec 16 2019	33	2019Dec20	3	illumina 2-step
+HMS-DeMMO5-steri-290817	experimental	NorthWestern	experimental	14600-50-NF	unknown	October 5 2017	MoBIO PowerWater Sterivex DNA Isolation Kit	7	5	experimental	Dec 16 2019	33	2019Dec20	3	illumina 2-step
+HMS-DeMMO5-steri-281117	experimental	NorthWestern	experimental	14600-50-NF	unknown	April 25 2018	MoBIO PowerWater Sterivex DNA Isolation Kit	7	5	experimental	Dec 16 2019	33	2019Dec20	3	illumina 2-step
+HMS-DeMMO5-steri-160418	experimental	NorthWestern	experimental	14600-50-NF	unknown	April 25 2018	MoBIO PowerWater Sterivex DNA Isolation Kit	7	5	experimental	Dec 16 2019	33	2019Dec20	3	illumina 2-step
+HMS-Dec-16-18-PCR-blank	control						PCR blank 55 cycles	8	5	experimental	Dec 16 2019	55	2019Dec20	3	illumina 2-step
