@@ -56,8 +56,8 @@ class TestsSplitBatches(TestPluginBase):
 
     def setUp(self):
         super().setUp()
-        data = self.get_data_path('q2-decontam_test_data_metadata.tsv')
-        self.data = Metadata.load(data)
+        # data = self.get_data_path('q2-decontam_test_data_metadata.tsv')
+        # self.data = Metadata.load(data)
 
         self.split_batches = self.plugin.actions['split_batches']
 
@@ -66,22 +66,31 @@ class TestsSplitBatches(TestPluginBase):
         self.assertTrue(True)
 
     def test_split_batches_batch_types(self):
-       actual, = self.split_batches (self.data, ['extraction', 'amp_batch'])
-       # returns a result that contains an artifact the ',' returns the
-       # first thing in the result, the artifact itself
-       # expected computed by hond
-       expected = {'amp_batch_1.0': ['HMS-poorman-B', 'HMS-poorman-C', 'HMS-yates-B', 'HMS-yates-C', 'HMS-glass-beads', 'HMS-SURF-0517-M3-C', 'HMS-SURF-0517-M4-C', 'HMS-SURF-0517-C3-C', 'HMS-SURF-0517-C4-C', 'HMS-SURF-0517-M5-C', 'HMS-SURF-0517-M6-C', 'HMS-SURF-0217-M1-C', 'HMS-SURF-0217-M2-C', 'HMS-SURF-0217-C3-C', 'HMS-SURF-0217-C4-C', 'HMS-SURF-0217-M3-C', 'HMS-SURF-0217-M4-C', 'HMS-SURF-0217-M8-B'], 'amp_batch_2.0': ['HMS-SURF-0517-M1-B', 'HMS-SURF-0517-M2-B', 'HMS-SURF-0517-C1-B', 'HMS-SURF-0517-C2-B', 'HMS-neg-ext-33', 'HMS-neg-PCR-33', 'HMS-SURF-0217-M7-B', 'HMS-SURF-0217-C1-B', 'HMS-SURF-0217-C2-B', 'HMS-neg-ext--55', 'HMS-neg-PCR-55'], 'amp_batch_3.0': ['HMS-1128-M8C-28', 'HMS-0416-M3C', 'HMS-0416-M5C'], 'amp_batch_4.0': ['HMS-1128-M7C', 'HMS-1128-M8C-33', 'HMS-1128-C2C', 'HMS-1128-C3C', 'HMS-1128-M5C', 'HMS-1128-M6C', 'HMS-1128-M1B', 'HMS-1128-M2B', 'HMS-1128-C1B', 'HMS-1128-C4B', 'HMS-0416-C2C', 'HMS-0416-C3C', 'HMS-0416-M1B', 'HMS-0416-C1B', 'HMS-blank-3', 'HMS-blank-1', 'HMS-blank-2', 'HMS-PCR-neg'], 'amp_batch_5.0': ['HMS-DeMMO5-steri-140218', 'HMS-DeMMO5-steri-100517', 'HMS-DeMMO5-steri-290817', 'HMS-DeMMO5-steri-281117', 'HMS-DeMMO5-steri-160418', 'HMS-Dec-16-18-PCR-blank'], 'extraction_1': ['HMS-poorman-B', 'HMS-poorman-C', 'HMS-yates-B', 'HMS-yates-C', 'HMS-glass-beads', 'HMS-SURF-0517-M3-C', 'HMS-SURF-0517-M4-C', 'HMS-SURF-0517-C3-C', 'HMS-SURF-0517-C4-C', 'HMS-SURF-0517-M5-C', 'HMS-SURF-0517-M6-C', 'HMS-SURF-0517-M1-B', 'HMS-SURF-0517-M2-B', 'HMS-SURF-0517-C1-B', 'HMS-SURF-0517-C2-B', 'HMS-neg-ext-33', 'HMS-neg-ext--55'], 'extraction_2': ['HMS-SURF-0217-M1-C', 'HMS-SURF-0217-M2-C', 'HMS-SURF-0217-C3-C', 'HMS-SURF-0217-C4-C', 'HMS-SURF-0217-M3-C', 'HMS-SURF-0217-M4-C', 'HMS-SURF-0217-M8-B', 'HMS-SURF-0217-M7-B', 'HMS-SURF-0217-C1-B', 'HMS-SURF-0217-C2-B'], 'extraction_3': ['HMS-1128-M8C-28', 'HMS-0416-M3C', 'HMS-0416-M5C', 'HMS-1128-M7C', 'HMS-1128-M8C-33', 'HMS-1128-C2C', 'HMS-1128-C3C', 'HMS-1128-M5C', 'HMS-1128-M6C', 'HMS-1128-M1B', 'HMS-1128-M2B', 'HMS-1128-C1B', 'HMS-1128-C4B', 'HMS-0416-C2C', 'HMS-0416-C3C', 'HMS-0416-M1B', 'HMS-blank-1', 'HMS-blank-2'], 'extraction_4': ['HMS-0416-C1B', 'HMS-blank-3'], 'extraction_NorthWestern': ['HMS-DeMMO5-steri-140218', 'HMS-DeMMO5-steri-100517', 'HMS-DeMMO5-steri-290817', 'HMS-DeMMO5-steri-281117', 'HMS-DeMMO5-steri-160418'], 'extraction_nan': []}
+        # data must be categorical, only str
+        data = qiime2.Metadata(pd.DataFrame(
+           {'extraction': ['1', '1', np.nan, '2','2', np.nan],
+            'amplification': ['1', '1', '1', '2', '2', '2']},
+           index=pd.Index(['sample1', 'sample2', 'sample3', 'sample4',
+                           'sample5', 'sample6'], name='sampleid')))
+        # returns a result that contains an artifact the ',' returns the
+        # first thing in the result, the artifact itself
+        actual, = self.split_batches(data, ['extraction', 'amplification'])
+        # expected computed by hond
+        expected = {'amplification_1': ['sample1', 'sample2', 'sample3'],
+                    'amplification_2': ['sample4', 'sample5', 'sample6'],
+                    'extraction_1': ['sample1', 'sample2'],
+                    'extraction_2': ['sample4', 'sample5'],
+                    'extraction_nan': []}
 
-       self.assertDictEqual(actual.view(dict), expected)
-       # TODO check semantic type of actual
+        self.assertDictEqual(actual.view(dict), expected)
+        # TODO check semantic type of actual
 
     def test_split_batches_no_batch_types(self):
-        # this function only operated over the index therefore no data cols
-        # are supplied
+        # function only operated over index, no data cols supplied
         data = qiime2.Metadata(pd.DataFrame(index=pd.Index(
-            ['sample1', 'sample2', 'sample3', 'sample4'], name='sampleid')))
-        actual, = self.split_batches (data)
-        expected = {'single_batch': ['sample1', 'sample2', 'sample3', 'sample4']}
+            ['sample1', 'sample2'], name='sampleid')))
+        actual, = self.split_batches(data)
+        expected = {'single_batch': ['sample1', 'sample2']}
         self.assertDictEqual(actual.view(dict), expected)
 
     # def test_split_batches_no_batch_types(self):
