@@ -1,0 +1,4 @@
+# Constructed from biom file
+#OTU ID	S1	S2	S3
+O1	0.0	1.0	3.0
+O2	1.0	1.0	2.0

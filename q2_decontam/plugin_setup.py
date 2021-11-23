@@ -14,13 +14,19 @@
 
 import importlib
 
-from qiime2.plugin import (Plugin, Metadata, List, Str)  # type q2.metadata is the object
+from qiime2.plugin import (
+    Plugin, Metadata, List, Str)  # type q2.metadata is the object
 from q2_types.feature_data import (
     FeatureData, Taxonomy)
+from q2_types.feature_table import (FeatureTable, Frequency,
+                                    RelativeFrequency)
+from qiime2.core.type import TypeMatch
 
-from .actions import hello, text_vis, split_batches
+from .actions import hello, text_vis, split_batches, split_samples
 from .format_types import Greeting, GreetingFormat, GreetingDirectoryFormat, \
-    Filter, FilterFormat, FilterDirectoryFormat, BatchSet, YamlDirectoryFormat
+    Filter, FilterFormat, FilterDirectoryFormat, BatchSet, \
+    YamlDirectoryFormat, FeatureTableBatches, SampleBatchesDirFmt
+
 # from q2_types.feature_table import (
 #    FeatureTable, Frequency, RelativeFrequency)
 
@@ -33,7 +39,8 @@ from .format_types import Greeting, GreetingFormat, GreetingDirectoryFormat, \
 plugin = Plugin("decontam", version="0.0.1.dev",
                 website="https://github.com/Hsapers/q2-decontam")
 
-plugin.register_semantic_types(Greeting, Filter, BatchSet)
+plugin.register_semantic_types(Greeting, Filter, BatchSet, FeatureTableBatches)
+
 plugin.register_formats(GreetingFormat, GreetingDirectoryFormat,
                         FilterFormat, FilterDirectoryFormat,
                         YamlDirectoryFormat)
@@ -45,6 +52,9 @@ plugin.register_semantic_type_to_format(Greeting, GreetingDirectoryFormat)
 
 plugin.register_semantic_type_to_format(
     BatchSet, YamlDirectoryFormat)
+
+plugin.register_semantic_type_to_format(
+    FeatureTableBatches[Frequency | RelativeFrequency], SampleBatchesDirFmt)
 
 plugin.methods.register_function(
     function=hello,
@@ -71,11 +81,35 @@ plugin.methods.register_function(
     function=split_batches,
     inputs={},
     parameters={'sample_metadata': Metadata,
-                'batch_types':List[Str]}, #map parameter type
+                'batch_types':List[Str]},
     outputs=[('batches', BatchSet)],
     name='',
     description=''
 )
+
+T=TypeMatch([Frequency, RelativeFrequency])
+plugin.pipelines.register_function(
+    function=split_samples,
+    inputs={'table':
+            FeatureTable[T]},
+    parameters={'sample_metadata': Metadata,
+                'batch_types':List[Str]},
+    outputs=[FeatureTableBatches[T]],
+    name='',
+    description=''
+)
+
+# plugin.pipelines.register_function(
+#     #T=TypeMatch([Frequency, RelativeFrequency]),
+#     function=split_samples,
+#     inputs={'table':
+#             FeatureTable[Frequency | RelativeFrequency],
+#             'batch_dict': BatchSet},
+#     parameters={},
+#     outputs=[FeatureTableBatches[Frequency | RelativeFrequency]],
+#     name='',
+#     description=''
+# )
 
 # plugin.methods.register_function(
 #     function=filter_asv_singletons,
