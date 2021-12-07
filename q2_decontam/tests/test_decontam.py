@@ -13,12 +13,19 @@
 #   limitations under the License.
 
 import unittest
-
 import qiime2
 from qiime2.plugin.testing import TestPluginBase
-from qiime2 import Metadata
+from qiime2.plugin.util import transform
+
+from q2_types.feature_table import BIOMV210Format
+from q2_decontam.actions.decontam import _list_to_featuretablebatches
+
+#from qiime2 import Artifact
 import numpy as np
 import pandas as pd
+import biom
+import yaml
+
 import pandas.testing as pdt
 
 from ..format_types import YamlDirectoryFormat
@@ -50,32 +57,88 @@ from ..format_types import YamlDirectoryFormat
 #q2 replaces underscore with hyphens for cli
 # set up is a method of testpluginbase - I want to run the setup method from the porent class
 # super().setUp() creates 'plugin'
-class TestsSplitBatches(TestPluginBase):
+class TestsPreprocessing(TestPluginBase):
 
     package = 'q2_decontam.tests'
 
     def setUp(self):
         super().setUp()
-        # data = self.get_data_path('q2-decontam_test_data_metadata.tsv')
-        # self.data = Metadata.load(data)
+        table = self.get_data_path('feature_table_test.biom')
+        self.table = qiime2.Artifact.import_data(
+            'FeatureTable[Frequency]', table)
+
+        # test data:
+        # amplification controls are never extracted
+        # extraction controls are never controls for amplifications
+        # amplification contaminants should appear in everything amplified
+        # extraction contaminants should appear in everything extracted
+        # amplification controls: sample3, sample6
+        # extraction controls: sample2, sample5
+        # amplification contaminant: ASV_4
+        # extraction contaminant: ASV_5
+
+        # this is what is in self.table
+        self.feature_table = biom.Table(
+            np.array([[100, 0, 0, 100, 0, 0], [0, 0, 0, 100, 0, 0],
+                      [100, 0, 0, 0, 0, 0], [10, 10, 10, 10, 10, 10],
+                      [10, 10, 0, 10, 10, 0]]),
+                      ['ASV_1', 'ASV_2', 'ASV_3', 'ASV_4', 'ASV_5'],
+                      ['sample1', 'sample2', 'sample3', 'sample4',
+                       'sample5', 'sample6'])
+
+        self.meta_data = qiime2.Metadata(pd.DataFrame(
+           {'sample_type': ['experimental', 'control', 'control',
+                            'experimental', 'control', 'control'],
+            'amplification_type': ['experimental', 'experimental', 'control',
+                                   'experimental', 'experimental', 'control'],
+            'extraction': ['1', '1', np.nan, '2', '2', np.nan],
+            'amplification': ['1', '1', '1', '2', '2', '2']},
+           index=pd.Index(['sample1', 'sample2', 'sample3', 'sample4',
+                           'sample5', 'sample6'], name='sampleid')))
+
+        self.extraction_1 = biom.Table(
+            np.array([[100, 0], [0, 0], [100, 0], [10, 10], [10, 10]]),
+                      ['ASV_1', 'ASV_2', 'ASV_3', 'ASV_4', 'ASV_5'],
+                      ['sample1', 'sample2'])
+
+        self.extraction_2 = biom.Table(
+            np.array([[100, 0], [100, 0], [0, 0], [10, 10], [10, 10]]),
+                      ['ASV_1', 'ASV_2', 'ASV_3', 'ASV_4', 'ASV_5'],
+                      ['sample4', 'sample5'])
+
+        self.amplification_1 = biom.Table(
+            np.array([[100, 0, 0], [0, 0, 0], [100, 0, 0],
+                      [10, 10, 10], [10, 10, 0]]),
+                      ['ASV_1', 'ASV_2', 'ASV_3', 'ASV_4', 'ASV_5'],
+                      ['sample1', 'sample2', 'sample3'])
+
+        self.amplification_2 = biom.Table(
+            np.array([[100, 0, 0], [100, 0, 0], [0, 0, 0],
+                      [10, 10, 10], [10, 10, 0]]),
+                      ['ASV_1', 'ASV_2', 'ASV_3', 'ASV_4', 'ASV_5'],
+                      ['sample4','sample5', 'sample6'])
 
         self.split_batches = self.plugin.actions['split_batches']
+        self.split_samples = self.plugin.actions['split_samples']
+        self._list_to_featuretablebatches = \
+            self.plugin.actions['_list_to_featuretablebatches']
 
     def test_smoke(self):
     # will only fail if setup doesn't work
         self.assertTrue(True)
 
-    def test_split_batches_batch_types(self):
+    def test_split_batches_batch_types_categorical(self):
         # data must be categorical, only str
-        data = qiime2.Metadata(pd.DataFrame(
-           {'extraction': ['1', '1', np.nan, '2','2', np.nan],
+        md = qiime2.Metadata(pd.DataFrame(
+           {'extraction': ['1', '1', np.nan, '2', '2', np.nan],
             'amplification': ['1', '1', '1', '2', '2', '2']},
            index=pd.Index(['sample1', 'sample2', 'sample3', 'sample4',
                            'sample5', 'sample6'], name='sampleid')))
         # returns a result that contains an artifact the ',' returns the
         # first thing in the result, the artifact itself
-        actual, = self.split_batches(data, ['extraction', 'amplification'])
-        # expected computed by hond
+        actual, = self.split_batches(md, ['extraction', 'amplification'])
+        print(actual.view(dict))
+        # expected computed by hand
         expected = {'amplification_1': ['sample1', 'sample2', 'sample3'],
                     'amplification_2': ['sample4', 'sample5', 'sample6'],
                     'extraction_1': ['sample1', 'sample2'],
@@ -85,22 +148,116 @@ class TestsSplitBatches(TestPluginBase):
         self.assertDictEqual(actual.view(dict), expected)
         # TODO check semantic type of actual
 
-    def test_split_batches_no_batch_types(self):
+    def test_split_batches_no_batch_types_categorical(self):
         # function only operated over index, no data cols supplied
-        data = qiime2.Metadata(pd.DataFrame(index=pd.Index(
+        md = qiime2.Metadata(pd.DataFrame(index=pd.Index(
             ['sample1', 'sample2'], name='sampleid')))
-        actual, = self.split_batches(data)
+        actual, = self.split_batches(md)
         expected = {'single_batch': ['sample1', 'sample2']}
         self.assertDictEqual(actual.view(dict), expected)
 
-    # def test_split_batches_no_batch_types(self):
-    #     actual = split-batches(--m-sample-metadata-file =self.data,
-    #                            --o-batches = batches.qza,
-    #                            )
-    #     actual = actual[].veiw(pd.Series)
-    #     #expected computed by hand
-    #     expected = pd.Series({})
-    #     pdt.assert_series_equal(actual, expected)
+    def test_split_batches_batch_types_numerical(self):
+        # data must be categorical, only str
+        md = qiime2.Metadata(pd.DataFrame(
+           {'extraction': [1, 1, np.nan, 2, 2, np.nan],
+            'amplification': [1, 1, 1, 2, 2, 2]},
+           index=pd.Index(['sample1', 'sample2', 'sample3', 'sample4',
+                           'sample5', 'sample6'], name='sampleid')))
+        # returns a result that contains an artifact the ',' returns the
+        # first thing in the result, the artifact itself
+        actual, = self.split_batches(md, ['extraction', 'amplification'])
+        #print(actual.view(dict))
+        # expected computed by hand
+        expected = {'amplification_1.0': ['sample1', 'sample2', 'sample3'],
+                    'amplification_2.0': ['sample4', 'sample5', 'sample6'],
+                    'extraction_1.0': ['sample1', 'sample2'],
+                    'extraction_2.0': ['sample4', 'sample5'],
+                    'extraction_nan': []}
+
+        self.assertDictEqual(actual.view(dict), expected)
+        # TODO check semantic type of actual
+
+    # def test_split_samples_single(self):
+    #
+    #     metadata = qiime2.Metadata(pd.DataFrame(
+    #         {'extraction': ['1', '1', '1', np.nan, np.nan, np.nan],
+    #          'amplification': ['1', '1', '1', '2', '2', '2']},
+    #         index=pd.Index(['sample1', 'sample2', 'sample3', 'sample4',
+    #                         'sample5', 'sample6'], name='sampleid')))
+    #
+    #     actual, = self.split_samples(self.table, metadata,
+    #                                 ['extraction'])
+    #
+    #     e_dir = self.get_data_path('SampleBatchesDir')
+    #
+    #     expected = qiime2.Artifact.import_data(
+    #         'FeatureTableBatches[Frequency]', e_dir)
+    #
+    #     self.assertEqual(actual, expected)
+
+        #TODO write out biom table see https://github.com/qiime2/q2-feature-table/blob/master/q2_feature_table/tests/test_core_features.py
+
+    def test_list_to_featuretablebatches(self):
+
+        list_of_files = ['batches/extraction_1.biom',
+                         'batches/extraction_2.biom',
+                         'batches/amplification_1.biom',
+                         'batches/amplification_2.biom']
+        ft_list = []
+        for name in list_of_files:
+            path = self.get_data_path(name)
+            fmt = BIOMV210Format(path, mode='r')
+            print(fmt)
+            ft_list.append(fmt)
+
+        name_list = ['extraction_1', 'extraction_2',
+                     'amplification_1', 'amplification_2']
+
+        print(ft_list)
+
+        actual = _list_to_featuretablebatches(ft_list, name_list)
+        actual = [(str(path), table) for path, table in
+                  (actual.batches.iter_views(biom.Table))]
+
+        print(actual)
+
+        #list of biom tables from list of BIOMV210
+        tables = [transform(f, to_type = biom.Table) for f in ft_list]
+        expected = [
+            ('amplification_1.biom', tables[2]),
+            ('amplification_2.biom', tables[3]),
+            ('extraction_1.biom', tables[0]),
+            ('extraction_2.biom', tables[1]),
+        ]
+        print(tables)
+        print(expected)
+
+        self.assertEqual(actual, expected)
+
+
+
+# pyr2 - handle cross laguage - pass off dataframe
+
+
+    # def test_split_samples_single(self):
+    #     #dict = {'amplification_1': ['sample1', 'sample2', 'sample3']}
+    #     #yaml_d = yaml.safe_dump(dict, default_flow_style=False)
+    #     batch_set_test = self.get_data_path('amp_1_test.yml')
+    #     actual = self.split_samples(self.table, batch_set_test)
+    #
+    #     e_table = self.get_data_path('amplification_1.biom')
+    #     expected = Artifact.import_data('FeatureTable[Frequency]',e_table)
+    #
+    #     self.assertEqual(actual.view(biom.Table), expected.view(biom.Table))
+
+
+
+
+ # emtpy metadata - should be handled by q2
+ # test empty batch type will evaluate to colname_nan
+ # assert raises - when I do this things after
+ #   with assert raises regex - check message  - correct value error for #2
+
 
 
 # d = {'sampleid':['sample1', 'sample2', 'sample3', 'sample4'],

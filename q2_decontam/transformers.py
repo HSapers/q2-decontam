@@ -25,18 +25,21 @@ from q2_types.per_sample_sequences import YamlFormat
 
 from .format_types import FilterFormat
 
+
 # transform Filter to CategoricalMetadataColumn(MetadataColumn)
 @plugin.register_transformer
 def _1(ff: FilterFormat) -> qiime2.Metadata:
     return qiime2.Metadata.load(str(ff))
 
+
 # dictionary to yaml format
 @plugin.register_transformer
 def _2(obj: dict) -> YamlFormat:
-    ff = YamlFormat() #allocate location for making a ymal
+    ff = YamlFormat()  # allocate location for making a ymal
     with ff.open() as fh:
-        yaml.safe_dump(obj, fh, default_flow_style = False)
+        yaml.safe_dump(obj, fh, default_flow_style=False)
     return ff
+
 
 # yaml to dict
 @plugin.register_transformer
@@ -44,7 +47,9 @@ def _3(ff: YamlFormat) -> dict:
     with ff.open() as fh:
         return yaml.safe_load(fh)
 
-def tidy_data(metadata: qiime2.Metadata, tax_table: Taxonomy, feature_table: FeatureTable, outfile: str ):
+
+def tidy_data(metadata: qiime2.Metadata, tax_table:
+              Taxonomy, feature_table: FeatureTable, outfile: str):
     ASV_table = q2.Artifact.load(feature_table)
     ASV_df = ASV_table.view(q2.Metadata).to_dataframe()
 
@@ -79,7 +84,7 @@ def tidy_data(metadata: qiime2.Metadata, tax_table: Taxonomy, feature_table: Fea
     # create a total reads per sample column
     ASV_meta_tax_df['total_reads'] = (ASV_meta_tax_df.groupby(['sampleid'])['reads'].transform('sum'))
 
-    #remove all ASVs that have no reads in samples in metadata
+    # remove all ASVs that have no reads in samples in metadata
     tidy_df = ASV_meta_tax_df[ASV_meta_tax_df['read']>0]
 
     # see how many singletons are left after subsetting. Dada2 should get rid of singletons, but can re-inroduced after sub setting samples. We will remove these with caution - they are not true singletons, but are only observed once in the remaining samples.

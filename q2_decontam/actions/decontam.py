@@ -13,17 +13,21 @@
 #   limitations under the License.
 
 # import glob
-# import pandas as pd
+import pandas as pd
 import subprocess
+import h5py
 
 # import qiime2 as q2
 import qiime2.util
+from q2_types.feature_table import BIOMV210Format
+
 import biom
 from typing import Optional, Tuple, Any, List
 from ..format_types import FilterFormat
 # from q2_types.feature_table import FeatureTable
 # from q2_types.feature_data import Taxonomy
 
+from ..format_types import SampleBatchesDirFmt, FeatureTableBatches
 
 def run_commands(cmds, verbose=True):
     if verbose:
@@ -68,6 +72,9 @@ def run_commands(cmds, verbose=True):
 # only look at one col at a time
 # may not need to run if only have one batch
 def split_batches(
+        # don't need to explictly need a metatdata param, will be called
+        # TODO warn user that they are not splitting into batches
+        # warning: a single batch will be containing all sample ids
         sample_metadata: qiime2.Metadata,
         # list of batch type col headers ['ext_id', 'amp_id', 'seq_id']
         batch_types: List[str] = None,
@@ -91,6 +98,103 @@ def split_batches(
 
     return batch_dict
 
+
+def _list_to_featuretablebatches(feature_table_list: BIOMV210Format,
+                                 feature_table_name_list: List[str]
+                                 ) -> FeatureTableBatches:
+
+    if len(feature_table_list) != len(feature_table_name_list):
+        raise ValueError("number of batches does not match "
+                         "number of feature tables")
+
+    zipped_tables = zip(feature_table_name_list, feature_table_list)
+
+    result = SampleBatchesDirFmt()
+
+    for name, table in zipped_tables:
+        path = result.batches.path_maker(batch=name)
+        qiime2.util.duplicate(str(table), path)
+
+    return result
+
+
+def split_samples(ctx, table, sample_metadata, batch_types):
+
+    filter_samples = ctx.get_action('feature_table', 'filter_samples')
+    split_batches = ctx.get_action('decontam', 'split_batches')
+    _list_to_featuretablebatches = ctx.get_action(
+        'decontam', '_list_to_featuretablebatches')
+
+    batches, = split_batches(sample_metadata, batch_types)
+    batch_dict = batches.view(dict)
+    filtered = []
+    names = []
+
+    for batch, ids in batch_dict.items():
+        if ids:
+            id_md = qiime2.Metadata(
+                pd.DataFrame(index=pd.Index(ids, name='sampleid')))
+            filtered_table, = filter_samples(table=table, metadata=id_md,)
+            filtered.append(filtered_table)
+            names.append(batch)
+
+    result = _list_to_featuretablebatches(names, filtered)
+
+    return result
+
+
+
+
+
+    artifact_list = []
+    batch_dict =  batch_set.view(dict)
+    for k, v in batch_dict:
+        df = pd.DataFrame(index=pd.Series(v, name='ids'))
+        metatdata_artifact = ctx.make_artifact(Metadata, df)
+        artifact_list.append(metatdata_artifact)
+
+        return artifact_list
+    #call helper method with filtered list and batchdict.keys
+#if this is called in a pipeline, you're doing something wrong
+    #artifact = ctx.make_artifact(FeatureTableBatches[table.type.fields[0]],
+     #                            result)
+
+
+# a loop filtering each table
+# putting all tables together
+# utility could take a list of names  - glue tables into a place in dir, easy to test - list of tables
+
+# def split_samples(ctx, table, batch_dict):
+    #batch_set.view(dict)
+#     # TODO change 'batch_dict' to better param name
+#     filter_samples = ctx.get_action('feature_table', 'filter_samples')
+#     result = SampleBatchesDirFmt()
+#
+#     for batch, ids in batch_dict:
+#         if ids:
+#             filtered_table, = filter_samples(table=table, metadata_file=ids,)
+#             path = result.batches.path_maker(batch)
+#             with h5py.File(path, 'wb') as file:
+#                 file.write(filtered_table)
+#
+#     return result
+
+
+
+
+
+
+
+# if expected['extraction_nan'] != []: explicit
+#    filter_table(...)
+
+#if expected['extraction_nan']: implicit
+#    filter_table(....)
+
+
+#here expected is the dict being generated (batch_dict)
+# an empty list evaluates to false, will not filter a table if empty
+
 #batch_type = col head for 'type of control batch'
 #batch_id = the unique values within each batch_type col
 
@@ -112,7 +216,14 @@ def split_batches(
 #         sample_type_col: str,
 #         experimental_samples_name: str = 'experimental') -> \
 #         # Tuple[biom.Table, ...]:
-#
+# throw a doc string below header with type information to track
+# see core metrics for directory structure: https://github.com/qiime2/q2-diversity/blob/ff515b3668510b19e1204b69e598177ad4b1c7de/q2_diversity/plugin_setup.py#L280
+#output dir is autogened as a parameter
+#returning the directory structure  - return a yaml directory format artifact
+#give a semantic type to the dictory - on disk actually a yaml dir format
+#save to disk as I go or create a list of feature tables as I go. Feature tables(semantic) write as biome table(format), stick into directory - coerce into artifact
+#collection of things - aggregates abunch of stuff
+#return f'{ft_name}_{dict_key}.table'
 #     sample_metadata = sample_metadata.to_dataframe()
 #     # create a list of unique values for each
 #     # control type metadata col sample_type

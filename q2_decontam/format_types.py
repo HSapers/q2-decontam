@@ -15,10 +15,12 @@
 import os
 import pandas as pd
 
+
 from qiime2.plugin import ValidationError
 import qiime2
 import qiime2.plugin.model as model
 from qiime2.plugin import SemanticType
+from q2_types.feature_table import Frequency, RelativeFrequency, BIOMV210Format
 from q2_types.per_sample_sequences import YamlFormat
 from q2_types.feature_table._type import FeatureTable
 from q2_types.feature_data._type import FeatureData
@@ -34,10 +36,10 @@ class GreetingFormat(model.TextFileFormat):
         # TODO: ran out of time
         pass
 
-
 GreetingDirectoryFormat = model.SingleFileDirectoryFormat(
     'GreetingDirectoryFormat', 'greeting.txt', GreetingFormat
 )
+
 
 Filter = SemanticType('Filter',
                             variant_of=FeatureData.field['type'])
@@ -59,6 +61,21 @@ BatchSet = SemanticType('BatchSet')
 
 YamlDirectoryFormat = model.SingleFileDirectoryFormat(
     'YamlDirectoryFormat', 'data.yaml', YamlFormat)
+
+
+FeatureTableBatches = SemanticType('FeatureTableBatches',
+                                   field_names=['content'],
+                                   field_members={
+                                       'content': (Frequency,
+                                                   RelativeFrequency)})
+
+class SampleBatchesDirFmt(model.DirectoryFormat):
+    batches = model.FileCollection(r'.*.biom',
+                                     format=BIOMV210Format)
+    @batches.set_path_maker
+    def batches_path_maker(self, batch):
+        return f'{batch}.biom'
+
 
 # This call assigns a default format to a Type, not vice versa. One format
 # can be the default for many types. Each type should have a single default
