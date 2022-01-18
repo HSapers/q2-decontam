@@ -104,9 +104,9 @@ plugin.pipelines.register_function(
     function=split_samples,
     inputs={'table': FeatureTable[T]},
     parameters={'sample_metadata': Metadata,
-                'batch_types':List[Str]}, # could imply an order...second index doesn't happen before first - some assumption of time dependence byt list order #default dont' allow default more than one control type per batch -f
+                'batch_types':List[Str]},
     outputs=[('feature_tables_by_batch', FeatureTableBatches[T])],
-    name='',
+    name='split samples',
     description=''
 )
 
