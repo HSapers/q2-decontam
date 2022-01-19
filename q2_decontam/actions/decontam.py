@@ -101,7 +101,7 @@ def split_batches(
 
 def _list_to_featuretablebatches(feature_table_list: BIOMV210Format,
                                  feature_table_name_list: List[str]
-                                 ) -> FeatureTableBatches:
+                                 ) -> SampleBatchesDirFmt:
 
     if len(feature_table_list) != len(feature_table_name_list):
         raise ValueError("number of batches does not match "
@@ -130,15 +130,23 @@ def split_samples(ctx, table, sample_metadata, batch_types):
     filtered = []
     names = []
 
+    #print(batch_dict.items())
+
     for batch, ids in batch_dict.items():
         if ids:
             id_md = qiime2.Metadata(
                 pd.DataFrame(index=pd.Index(ids, name='sampleid')))
+            #print(id_md.to_dataframe())
             filtered_table, = filter_samples(table=table, metadata=id_md,)
+            #print(filtered_table.view(biom.Table))
             filtered.append(filtered_table)
             names.append(batch)
 
-    result = _list_to_featuretablebatches(names, filtered)
+    #print(names)
+    #print(filtered)
+
+    result, = _list_to_featuretablebatches(filtered, names)
+    #print(list((result.view(result.format)).batches.iter_views(biom.Table)))
 
     return result
 
@@ -147,7 +155,7 @@ def split_samples(ctx, table, sample_metadata, batch_types):
 
 
     artifact_list = []
-    batch_dict =  batch_set.view(dict)
+    batch_dict = batch_set.view(dict)
     for k, v in batch_dict:
         df = pd.DataFrame(index=pd.Series(v, name='ids'))
         metatdata_artifact = ctx.make_artifact(Metadata, df)
