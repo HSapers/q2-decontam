@@ -67,25 +67,25 @@ class TestsPreprocessing(TestPluginBase):
                            'sample5', 'sample6'], name='sampleid')))
 
         self.extraction_1 = biom.Table(
-            np.array([[100, 0], [0, 0], [100, 0], [10, 10], [10, 10]]),
-                      ['ASV_1', 'ASV_2', 'ASV_3', 'ASV_4', 'ASV_5'],
+            np.array([[100, 0], [100, 0], [10, 10], [10, 10]]),
+                      ['ASV_1', 'ASV_3', 'ASV_4', 'ASV_5'],
                       ['sample1', 'sample2'])
 
         self.extraction_2 = biom.Table(
-            np.array([[100, 0], [100, 0], [0, 0], [10, 10], [10, 10]]),
-                      ['ASV_1', 'ASV_2', 'ASV_3', 'ASV_4', 'ASV_5'],
+            np.array([[100, 0], [100, 0], [10, 10], [10, 10]]),
+                      ['ASV_1', 'ASV_2', 'ASV_4', 'ASV_5'],
                       ['sample4', 'sample5'])
 
         self.amplification_1 = biom.Table(
-            np.array([[100, 0, 0], [0, 0, 0], [100, 0, 0],
+            np.array([[100, 0, 0], [100, 0, 0],
                       [10, 10, 10], [10, 10, 0]]),
-                      ['ASV_1', 'ASV_2', 'ASV_3', 'ASV_4', 'ASV_5'],
+                      ['ASV_1', 'ASV_3', 'ASV_4', 'ASV_5'],
                       ['sample1', 'sample2', 'sample3'])
 
         self.amplification_2 = biom.Table(
-            np.array([[100, 0, 0], [100, 0, 0], [0, 0, 0],
+            np.array([[100, 0, 0], [100, 0, 0],
                       [10, 10, 10], [10, 10, 0]]),
-                      ['ASV_1', 'ASV_2', 'ASV_3', 'ASV_4', 'ASV_5'],
+                      ['ASV_1', 'ASV_2', 'ASV_4', 'ASV_5'],
                       ['sample4','sample5', 'sample6'])
 
         self.split_batches = self.plugin.actions['split_batches']
