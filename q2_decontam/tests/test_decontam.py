@@ -152,15 +152,13 @@ class TestsPreprocessing(TestPluginBase):
 
     def test_list_to_featuretablebatches(self):
 
-        list_of_files = ['batches/extraction_1.biom',
-                         'batches/extraction_2.biom',
-                         'batches/amplification_1.biom',
-                         'batches/amplification_2.biom']
-        ft_list = []
-        for name in list_of_files:
-            path = self.get_data_path(name)
-            fmt = BIOMV210Format(path, mode='r')
-            ft_list.append(fmt)
+        input_biom_tables = [self.extraction_1,
+                             self.extraction_2,
+                             self.amplification_1,
+                             self.amplification_2]
+
+        ft_list = \
+            [transform(f, to_type=BIOMV210Format) for f in input_biom_tables]
 
         name_list = ['extraction_1', 'extraction_2',
                      'amplification_1', 'amplification_2']
@@ -169,7 +167,6 @@ class TestsPreprocessing(TestPluginBase):
         actual = [(str(path), table) for path, table in
                   (actual.batches.iter_views(biom.Table))]
 
-        #list of biom tables from list of BIOMV210
         tables = [transform(f, to_type = biom.Table) for f in ft_list]
         expected = [
             ('amplification_1.biom', tables[2]),
