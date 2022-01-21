@@ -13,9 +13,9 @@
 #   See the License for the specific language governing permissions and
 #   limitations under the License.
 
-from .actions import hello
+from .actions import hello, decontam
 
 # Good practice is to explicitely mark what is "available" for
 # subpackage export. This is only used by the `from x import *` syntax, but
 # it also keeps linters from complaining
-__all__ = ['hello']
+__all__ = ['hello', 'decontam']
