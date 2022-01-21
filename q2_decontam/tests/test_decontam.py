@@ -178,65 +178,71 @@ class TestsPreprocessing(TestPluginBase):
         self.assertEqual(actual, expected)
 
 
-    # def test_split_samples_single(self):
-    #
-    #     bt = ['amplification', 'extraction']
-    #
-    #     ft = qiime2.Artifact.import_data(
-    #         'FeatureTable[Frequency]', self.feature_table)
-    #
-    #     # print(ft.view(pd.DataFrame))
-    #
-    #     actual, = self.split_samples(ft, self.meta_data, bt)
-    #     # print(actual.type) FeatureTableBatches[frequency] holding FeatureTables
-    #
-    #     actual_batches_dir_fmt = (actual.view(actual.format))
-    #     # print(type(actual_batches_dir_fmt))
-    #     # 'q2_decontam.format_types.SampleBatchesDirFmt'
-    #
-    #     x = list(actual_batches_dir_fmt.batches.iter_views(biom.Table))
-    #     # print(actual_batches_dir_fmt.batches)
-    #     dfs = actual_batches_dir_fmt.batches.iter_views(pd.DataFrame)
-    #     for df in dfs:
-    #         print(df)
-    #
-    #     actual_batches_dir_fmt = [(str(path), table) for path, table in
-    #               (x)]
-    #     # print(f'actual_batches_dir_fmt {actual_batches_dir_fmt}')
-    #
-    #     list_of_files = ['batches/extraction_1.biom',
-    #                      'batches/extraction_2.biom',
-    #                      'batches/amplification_1.biom',
-    #                      'batches/amplification_2.biom']
-    #
-    #     # turn each biom table into a DF
-    #     # remove 'zero' cols
-    #     # turn back into biom tables
-    #
-    #     ft_list = []
-    #     for name in list_of_files:
-    #         path = self.get_data_path(name)
-    #         fmt = BIOMV210Format(path, mode='r')
-    #         ft_list.append(fmt)
-    #     tables = [transform(f, to_type=biom.Table) for f in ft_list]
-    #
-    #     exp_dfs = [transform(f, to_type=pd.DataFrame) for f in tables]
-    #     print(exp_dfs,'&*%$#')
-    #
-    #     for df, e in zip(dfs, exp_dfs):
-    #         print(df)
-    #         print(e)
-    #         print()
-    #
-    #     expected = [
-    #         ('amplification_1.biom', tables[2]),
-    #         ('amplification_2.biom', tables[3]),
-    #         ('extraction_1.biom', tables[0]),
-    #         ('extraction_2.biom', tables[1]),
-    #     ]
-    #     print(f'expected {expected}')
-    #
-    #     self.assertEqual(actual_batches_dir_fmt, expected)
+    def test_split_samples_single(self):
+
+        bt = ['amplification', 'extraction']
+
+        ft = qiime2.Artifact.import_data(
+            'FeatureTable[Frequency]', self.feature_table)
+
+        # print(ft.view(pd.DataFrame))
+
+        actual, = self.split_samples(ft, self.meta_data, bt)
+        # print(actual.type) FeatureTableBatches[frequency] holding FeatureTables
+
+        actual_batches_dir_fmt = (actual.view(actual.format))
+        # print(type(actual_batches_dir_fmt))
+        # 'q2_decontam.format_types.SampleBatchesDirFmt'
+
+        x = list(actual_batches_dir_fmt.batches.iter_views(biom.Table))
+        # print(actual_batches_dir_fmt.batches)
+        dfs = actual_batches_dir_fmt.batches.iter_views(pd.DataFrame)
+        for df in dfs:
+            print(df)
+
+        actual_batches_dir_fmt = [(str(path), table) for path, table in
+                  (x)]
+        # print(f'actual_batches_dir_fmt {actual_batches_dir_fmt}')
+
+        input_biom_tables = [self.extraction_1,
+                             self.extraction_2,
+                             self.amplification_1,
+                             self.amplification_2]
+
+        ft_list = \
+            [transform(f, to_type=BIOMV210Format) for f in input_biom_tables]
+
+        tables = [transform(f, to_type=biom.Table) for f in ft_list]
+
+        # list_of_files = ['batches/extraction_1.biom',
+        #                  'batches/extraction_2.biom',
+        #                  'batches/amplification_1.biom',
+        #                  'batches/amplification_2.biom']
+
+        # ft_list = []
+        # for name in list_of_files:
+        #     path = self.get_data_path(name)
+        #     fmt = BIOMV210Format(path, mode='r')
+        #     ft_list.append(fmt)
+        # tables = [transform(f, to_type=biom.Table) for f in ft_list]
+        #
+        # exp_dfs = [transform(f, to_type=pd.DataFrame) for f in tables]
+        # print(exp_dfs,'&*%$#')
+        #
+        # for df, e in zip(dfs, exp_dfs):
+        #     print(df)
+        #     print(e)
+        #     print()
+
+        expected = [
+            ('amplification_1.biom', tables[2]),
+            ('amplification_2.biom', tables[3]),
+            ('extraction_1.biom', tables[0]),
+            ('extraction_2.biom', tables[1]),
+        ]
+        print(f'expected {expected}')
+
+        self.assertEqual(actual_batches_dir_fmt, expected)
 
     # def test_split_samples_single(self):
     #     #dict = {'amplification_1': ['sample1', 'sample2', 'sample3']}
